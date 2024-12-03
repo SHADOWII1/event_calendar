@@ -40,7 +40,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
           firstName: _firstNameController.text,
           lastName: _lastNameController.text,
           email: _emailController.text,
-          password: hashedPassword,
+          password: _passwordController.text,
           role:_selectedRole ?? '',
           createdAt: DateTime.now().toIso8601String(),
           matriculationNumber: _matriculationNumberController.text,
