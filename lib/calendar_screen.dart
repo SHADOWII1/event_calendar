@@ -221,7 +221,11 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
               });
             },
             headerStyle: const HeaderStyle(
+              titleCentered: true,
               formatButtonVisible: false,
+              titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.blue),
+              rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.blue),
             ),
             calendarStyle: const CalendarStyle(
               todayTextStyle: TextStyle(color: Colors.white),
@@ -342,7 +346,17 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                   ),
                 );
               } else {
-                return const Center(child: Text('No Training Available Today.'));
+                return Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 100),
+                      Padding(
+                        padding: EdgeInsets.only(top: 40),
+                        child: Text('No Training Available Today.'),
+                      ),
+                    ],
+                  ),
+                );
               }
             },
           ),

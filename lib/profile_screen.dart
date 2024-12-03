@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:event_calendar/providers/user_provider.dart';
 import 'package:intl/intl.dart';
 import 'services/subscription_service.dart';
+import 'services/auth_services.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,6 +14,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late Future<int> _subscriptionsCountFuture;
+  final AuthService authService = AuthService();
 
   @override
   void initState() {
@@ -27,6 +29,11 @@ class _ProfilePageState extends State<ProfilePage> {
     DateTime dateTime = DateTime.parse(isoDateString);
     return DateFormat('yyyy-MM-dd HH:mm').format(dateTime); // Format as 'YYYY-MM-DD'
   }
+
+  void signOutUser(BuildContext context) {
+    authService.signOut(context);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -147,17 +154,12 @@ class _ProfilePageState extends State<ProfilePage> {
             // Edit Profile Button
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  // Placeholder function for editing profile
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Edit Profile functionality not implemented')),
-                  );
-                },
+                onPressed: () => signOutUser(context),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   textStyle: const TextStyle(fontSize: 16),
                 ),
-                child: const Text('Edit Profile'),
+                child: const Text('Log-Out'),
               ),
             ),
           ],

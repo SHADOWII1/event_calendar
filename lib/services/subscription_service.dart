@@ -74,13 +74,6 @@ class SubscriptionService {
           'training_code': trainingCode,
         }),
       );
-      Uri url = Uri.parse('$baseUrl/check-subscription').replace(queryParameters: {
-        'matriculation_number': matriculationNumber,
-        'training_code': trainingCode,
-      });
-      print('URI: ${url}');
-      print('Parameter: ${matriculationNumber} ${trainingCode}');
-      print('Response: ${response.statusCode} ${response.body}');
       // Handle successful response
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

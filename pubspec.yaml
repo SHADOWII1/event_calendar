@@ -75,6 +75,16 @@ flutter:
     - assets/academic-calendar-high-resolution-logo.png
     - assets/owl.png
     - assets/profile_picture.png
+    - assets/background-cards/image1.jpg
+    - assets/background-cards/image2.jpg
+    - assets/background-cards/image3.jpg
+    - assets/background-cards/image4.jpg
+    - assets/background-cards/image5.jpg
+    - assets/background-cards/image6.jpg
+    - assets/background-cards/image7.jpg
+    - assets/background-cards/image8.jpg
+    - assets/background-cards/image9.jpg
+    - assets/background-cards/image10.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

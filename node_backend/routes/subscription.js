@@ -82,10 +82,6 @@ subscriptionRouter.get("/get-subscriptions", async (req, res) => {
 subscriptionRouter.get("/check-subscription", async (req, res) => {
   const { matriculation_number, training_code } = req.query;
 
-  console.log('Received parameters:', req.query);
-
-  console.log(`Checking subscription for ${matriculation_number} and ${training_code}`);
-
   if (!matriculation_number || !training_code) {
         return res.status(400).json({ error: "Missing matriculation_number or training_code" });
   }
