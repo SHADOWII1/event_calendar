@@ -246,14 +246,17 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
               leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.blue),
               rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.blue),
             ),
-            calendarStyle: const CalendarStyle(
-              todayTextStyle: TextStyle(color: Colors.white),
+            calendarStyle: CalendarStyle(
+              todayTextStyle: TextStyle(color: Colors.blue),
               todayDecoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.blue.shade200.withOpacity(0.2),
+                border: Border.all(color: Colors.blue.shade200, width: 1.5),
                 shape: BoxShape.circle,
               ),
+              selectedTextStyle: TextStyle(color: Colors.green),
               selectedDecoration: BoxDecoration(
-                color: Colors.green,
+                color: Colors.green.shade200.withOpacity(0.2),
+                border: Border.all(color: Colors.green.shade200, width: 1.5),
                 shape: BoxShape.circle,
               ),
               markerDecoration: BoxDecoration(
@@ -279,7 +282,7 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                       padding: const EdgeInsets.all(4),
                       child: Text(
                         '${_trainingsCounter[dateWithoutTime]!.length}',
-                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                        style: const TextStyle(color: Colors.white, fontSize: 12),
                       ),
                     ),
                   );

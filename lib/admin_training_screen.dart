@@ -163,69 +163,116 @@ class _AdminTrainingsPageState extends State<AdminTrainingsPage> {
                                     // Dates and Times
                                     Row(
                                       children: [
-                                        const Icon(Icons.calendar_month,
-                                            size: 18, color: Colors.black),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          '${formatDate(training['start_date'])} - ${formatDate(training['end_date'])}',
-                                          style: const TextStyle(fontSize: 14),
+                                        Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Colors.purple.shade200.withOpacity(0.2), // Transparent blue background
+                                            border: Border.all(color: Colors.purple.shade200, width: 1.5), // Blue border
+                                            borderRadius: BorderRadius.circular(12), // Rounded corners
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              const SizedBox(width: 10),
+                                              Icon(Icons.calendar_month, size: 18, color: Colors.purple), // Blue icon
+                                              const SizedBox(width: 5),
+                                              Text(
+                                                training['start_date'] == training['end_date']
+                                                    ? formatDate(training['start_date']) // Only show one date if they are the same
+                                                    : '${formatDate(training['start_date'])} - ${formatDate(training['end_date'])}', // Show range if different
+                                                style: const TextStyle(fontSize: 14, color: Colors.purple), // Text style
+                                              ),
+                                              const SizedBox(width: 10),
+                                            ],
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.alarm,
-                                            size: 18, color: Colors.black),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          '${formatTime(training['start_time'])} - ${formatTime(training['end_time'])}',
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                    // Maximum Students
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.people,
-                                            size: 18, color: Colors.black),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          'Min | Max Students: ${training['min_enrolled_students']} | ${training['max_enrolled_students']}',
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black),
+                                        const SizedBox(width: 5),
+                                        Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Colors.purple.shade200.withOpacity(0.2), // Transparent blue background
+                                            border: Border.all(color: Colors.purple.shade200, width: 1.5), // Blue border
+                                            borderRadius: BorderRadius.circular(12), // Rounded corners
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              const SizedBox(width: 10),
+                                              Icon(Icons.alarm, size: 18, color: Colors.purple), // Blue icon
+                                              const SizedBox(width: 5),
+                                              Text(
+                                                '${formatTime(training['start_time'])} - ${formatTime(training['end_time'])}',
+                                                style: const TextStyle(fontSize: 14, color: Colors.purple), // Blue text
+                                              ),
+                                              const SizedBox(width: 10),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 8),
-                                    FutureBuilder<int>(
-                                      future: subscriptionService
-                                          .fetchSubscribedStudentsCount(
-                                          training['code']),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const CircularProgressIndicator();
-                                        } else if (snapshot.hasError) {
-                                          return Text(
-                                              'Error: ${snapshot.error}');
-                                        } else if (snapshot.hasData) {
-                                          return Row(
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue.shade200.withOpacity(0.2), // Transparent blue background
+                                            border: Border.all(color: Colors.blue.shade200, width: 1.5), // Blue border
+                                            borderRadius: BorderRadius.circular(12), // Rounded corners
+                                          ),
+                                          child: Row(
                                             children: [
-                                              const Icon(Icons.people,
-                                                  size: 18, color: Colors.blue),
-                                              const SizedBox(width: 8),
+                                              const SizedBox(width: 10),
+                                              Icon(Icons.people_alt, size: 18, color: Colors.blue), // Blue icon
+                                              const SizedBox(width: 5),
                                               Text(
-                                                '${snapshot.data} students subscribed', // Display the count
-                                                style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.blue),
+                                                'Students: ${training['min_enrolled_students']} | ${training['max_enrolled_students']}',
+                                                style: TextStyle(fontSize: 14, color: Colors.blue), // Blue text
                                               ),
+                                              const SizedBox(width: 10),
                                             ],
-                                          );
-                                        }
-                                        return const Text('No data available');
-                                      },
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        FutureBuilder<int>(
+                                          future: subscriptionService
+                                              .fetchSubscribedStudentsCount(
+                                              training['code']),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const CircularProgressIndicator();
+                                            } else if (snapshot.hasError) {
+                                              return Text(
+                                                  'Error: ${snapshot.error}');
+                                            } else if (snapshot.hasData) {
+                                              return Row(
+                                                children: [
+                                                  Container(
+                                                    height: 30,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.green.shade200.withOpacity(0.2), // Transparent blue background
+                                                      border: Border.all(color: Colors.blue.shade200, width: 1.5), // Blue border
+                                                      borderRadius: BorderRadius.circular(12), // Rounded corners
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        const SizedBox(width: 8),
+                                                        Icon(Icons.check_circle, size: 18, color: Colors.green), // Blue icon
+                                                        const SizedBox(width: 8),
+                                                        Text(
+                                                          'Enrolled: ${snapshot.data}',
+                                                          style: TextStyle(fontSize: 14, color: Colors.green), // Blue text
+                                                        ),
+                                                        const SizedBox(width: 8),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            }
+                                            return const Text('No data available');
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -253,17 +300,22 @@ class _AdminTrainingsPageState extends State<AdminTrainingsPage> {
                                   },
                                   child: Container(
                                     height: 30,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.blue, // Background color
-                                      borderRadius: BorderRadius.only(
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade200.withOpacity(0.2), // Blue with transparency
+                                      border: Border.all(
+                                        color: Colors.blue.shade200, // Blue border color
+                                        width: 2.0, // Border thickness
+                                      ),
+                                      borderRadius: const BorderRadius.only(
                                         bottomLeft: Radius.circular(12),
-                                        topLeft: Radius.circular(
-                                            12), // Rounded left corners
+                                        topLeft: Radius.circular(12),
                                       ),
                                     ),
-                                    child: const Center(
-                                      child:
-                                          Icon(Icons.edit, color: Colors.white),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Colors.blue.shade200, // Same color as the border
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -284,17 +336,22 @@ class _AdminTrainingsPageState extends State<AdminTrainingsPage> {
                                   },
                                   child: Container(
                                     height: 30,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red, // Background color
-                                      borderRadius: BorderRadius.only(
+                                    decoration: BoxDecoration(
+                                      color: Colors.red.shade200.withOpacity(0.2), // Blue with transparency
+                                      border: Border.all(
+                                        color: Colors.redAccent, // Blue border color
+                                        width: 2.0, // Border thickness
+                                      ),
+                                      borderRadius: const BorderRadius.only(
                                         bottomRight: Radius.circular(12),
-                                        topRight: Radius.circular(
-                                            12), // Rounded right corners
+                                        topRight: Radius.circular(12),
                                       ),
                                     ),
-                                    child: const Center(
-                                      child: Icon(Icons.delete,
-                                          color: Colors.white),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.red.shade200, // Same color as the border
+                                      ),
                                     ),
                                   ),
                                 ),

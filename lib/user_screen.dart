@@ -164,15 +164,22 @@ class _UsersPageState extends State<UsersPage> {
                       },
                       child: Container(
                         height: 30,
-                        decoration: const BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.only(
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade200.withOpacity(0.2), // Blue with transparency
+                          border: Border.all(
+                            color: Colors.blue.shade200, // Blue border color
+                            width: 2.0, // Border thickness
+                          ),
+                          borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(12),
                             topLeft: Radius.circular(12),
                           ),
                         ),
-                        child: const Center(
-                          child: Icon(Icons.edit, color: Colors.white),
+                        child: Center(
+                          child: Icon(
+                            Icons.edit,
+                            color: Colors.blue.shade200, // Same color as the border
+                          ),
                         ),
                       ),
                     ),
@@ -193,15 +200,22 @@ class _UsersPageState extends State<UsersPage> {
                       },
                       child: Container(
                         height: 30,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.only(
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade200.withOpacity(0.2), // Blue with transparency
+                          border: Border.all(
+                            color: Colors.redAccent, // Blue border color
+                            width: 2.0, // Border thickness
+                          ),
+                          borderRadius: const BorderRadius.only(
                             bottomRight: Radius.circular(12),
                             topRight: Radius.circular(12),
                           ),
                         ),
-                        child: const Center(
-                          child: Icon(Icons.delete, color: Colors.white),
+                        child: Center(
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.red.shade200, // Same color as the border
+                          ),
                         ),
                       ),
                     ),
