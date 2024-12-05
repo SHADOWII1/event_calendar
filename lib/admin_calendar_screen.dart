@@ -131,9 +131,10 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
   void _showTrainingDetails(BuildContext context, Map<String, dynamic> training) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,  // Allow custom height
       builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
+        return Container(
+          height: MediaQuery.of(context).size.height / 3,  // Set height to half the screen
           child: Card(
             elevation: 5,
             shape: RoundedRectangleBorder(
@@ -152,14 +153,13 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 15),
                   // Training Description
                   Text(
                     training['description'],
-                    style: TextStyle(
-                        fontSize: 16, color: Colors.grey[700]),
+                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   // Dates and Times
                   Text(
                     'Start Date: ${formatDate(training['start_date'])}',
@@ -195,13 +195,11 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                   // Maximum Students
                   Row(
                     children: [
-                      const Icon(Icons.people,
-                          size: 18, color: Colors.blue),
+                      const Icon(Icons.people, size: 18, color: Colors.blue),
                       const SizedBox(width: 8),
                       Text(
                         'Min | Max Students: ${training['min_enrolled_students']} | ${training['max_enrolled_students']}',
-                        style: const TextStyle(
-                            fontSize: 14, color: Colors.blue),
+                        style: const TextStyle(fontSize: 14, color: Colors.blue),
                       ),
                     ],
                   ),
@@ -213,6 +211,7 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
       },
     );
   }
+
 
 
   @override
@@ -293,7 +292,6 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                       ),
                     ),
                   );
-
                 }
                 return const SizedBox.shrink();
               },
