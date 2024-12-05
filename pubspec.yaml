@@ -46,6 +46,8 @@ dependencies:
   provider: ^6.0.0
   shared_preferences: ^2.0.17
   moment_dart: ^2.0.0
+  code_uml: ^1.0.2
+  mermaid: ^0.9.3
 
 dev_dependencies:
   flutter_test:

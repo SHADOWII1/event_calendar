@@ -1,0 +1,351 @@
+classDiagram
+class AdminCalendarViewPage {
+createState(): _AdminCalendarViewPageState
+}
+StatefulWidget <|-- AdminCalendarViewPage
+class _AdminCalendarViewPageState {
+trainingService: null
+filteredTrainings: List<Map<String, dynamic>>
+allTrainings: Future<List<Map<String, dynamic>>>
+-trainings: Map<DateTime, List<Map<String, dynamic>>>
+-trainingsCounter: Map<DateTime, List<Map<String, dynamic>>>
+-selectedDay: DateTime
+-focusedDay: DateTime
+subscriptionService: null
+backgroundImages: List<String>
+-currentPageIndex: int
+-carouselController: CarouselSliderController
+-_loadTrainings(): void
+getRandomImage(): String
+-_normalizeDate(): DateTime
+formatDate(): String
+-_filterTrainings(): void
+-_showTrainingDetails(): void
+initState(): void
+build(): Widget
+}
+State <|-- _AdminCalendarViewPageState
+_AdminCalendarViewPageState ..> Future
+_AdminCalendarViewPageState ..> DateTime
+_AdminCalendarViewPageState ..> CarouselSliderController
+class AdminTrainingsPage {
+createState(): _AdminTrainingsPageState
+}
+StatefulWidget <|-- AdminTrainingsPage
+class _AdminTrainingsPageState {
+backgroundImages: List<String>
+trainingService: null
+futureTrainings: Future<List<Map<String, dynamic>>>
+subscriptionService: null
+activeCardIndex: int?
+initState(): void
+-_loadTrainings(): void
+formatDate(): String
+formatTime(): String
+getRandomImage(): String
+build(): Widget
+}
+State <|-- _AdminTrainingsPageState
+_AdminTrainingsPageState ..> Future
+class CalendarViewPage {
+createState(): _CalendarViewPageState
+}
+StatefulWidget <|-- CalendarViewPage
+class _CalendarViewPageState {
+trainingService: null
+filteredTrainings: List<Map<String, dynamic>>
+allTrainings: Future<List<Map<String, dynamic>>>
+-trainings: Map<DateTime, List<Map<String, dynamic>>>
+-trainingsCounter: Map<DateTime, List<Map<String, dynamic>>>
+-selectedDay: DateTime
+-focusedDay: DateTime
+subscriptionService: null
+backgroundImages: List<String>
+-currentPageIndex: int
+-carouselController: CarouselSliderController
+-_loadTrainings(): void
+-_normalizeDate(): DateTime
+getRandomImage(): String
+formatDate(): String
+-_filterTrainings(): void
+-_showTrainingDetails(): void
+initState(): void
+build(): Widget
+}
+State <|-- _CalendarViewPageState
+_CalendarViewPageState ..> Future
+_CalendarViewPageState ..> DateTime
+_CalendarViewPageState ..> CarouselSliderController
+class CreateTrainingPage {
+createState(): _CreateTrainingPageState
+}
+StatefulWidget <|-- CreateTrainingPage
+class _CreateTrainingPageState {
+-formKey: null
+-trainingService: null
+-titleController: TextEditingController
+-codeController: TextEditingController
+-descriptionController: TextEditingController
+-startDateController: TextEditingController
+-endDateController: TextEditingController
+-startTimeController: TextEditingController
+-endTimeController: TextEditingController
+-maxStudentsController: TextEditingController
+-minStudentsController: TextEditingController
+-_selectDate(): void
+-_selectTime(): void
+-_submitForm(): void
+build(): Widget
+}
+State <|-- _CreateTrainingPageState
+_CreateTrainingPageState ..> TextEditingController
+class CreateUserPage {
+createState(): _CreateUserPageState
+}
+StatefulWidget <|-- CreateUserPage
+class _CreateUserPageState {
+-formKey: null
+-userService: null
+-selectedRole: String?
+-firstNameController: TextEditingController
+-lastNameController: TextEditingController
+-emailController: TextEditingController
+-passwordController: TextEditingController
+-roleController: TextEditingController
+-matriculationNumberController: TextEditingController
+-_hashPassword(): String
+-_submitForm(): void
+build(): Widget
+}
+State <|-- _CreateUserPageState
+_CreateUserPageState ..> TextEditingController
+class EditTrainingPage {
+training: Map<String, dynamic>
+trainingService: null
+createState(): _EditTrainingPageState
+}
+StatefulWidget <|-- EditTrainingPage
+class _EditTrainingPageState {
+titleController: TextEditingController
+codeController: TextEditingController
+descriptionController: TextEditingController
+startDateController: TextEditingController
+endDateController: TextEditingController
+startTimeController: TextEditingController
+endTimeController: TextEditingController
+maxStudentsController: TextEditingController
+minStudentsController: TextEditingController
+formatDate(): String
+initState(): void
+dispose(): void
+updateTraining(): void
+-_selectDate(): void
+-_selectTime(): void
+build(): Widget
+}
+State <|-- _EditTrainingPageState
+_EditTrainingPageState ..> TextEditingController
+class EditUserPage {
+user: Map<String, dynamic>
+userService: null
+createState(): _EditUserPageState
+}
+StatefulWidget <|-- EditUserPage
+class _EditUserPageState {
+matriculationNumberController: TextEditingController
+firstNameController: TextEditingController
+lastNameController: TextEditingController
+emailController: TextEditingController
+roleController: TextEditingController
+passwordController: TextEditingController
+-_hashPassword(): String
+initState(): void
+dispose(): void
+updateUser(): void
+build(): Widget
+}
+State <|-- _EditUserPageState
+_EditUserPageState ..> TextEditingController
+class AnimatedPopUp {
+createState(): _AnimatedPopUpState
+}
+StatefulWidget <|-- AnimatedPopUp
+class _AnimatedPopUpState {
+-controller: AnimationController
+-animation: Animation<double>
+initState(): void
+dispose(): void
+build(): Widget
+}
+State <|-- _AnimatedPopUpState
+_AnimatedPopUpState ..> AnimationController
+_AnimatedPopUpState ..> Animation
+class HomePage {
+isAdmin: bool
+createState(): _HomePageState
+}
+StatefulWidget <|-- HomePage
+class _HomePageState {
+-currentIndex: int
+-_pages(): Widget[0..*]
+build(): Widget
+}
+State <|-- _HomePageState
+class LoadingPage {
+createState(): _LoadingPageState
+}
+StatefulWidget <|-- LoadingPage
+class _LoadingPageState {
+initState(): void
+-_loadData(): void
+-_navigateToLogin(): void
+build(): Widget
+}
+State <|-- _LoadingPageState
+class LoginPage {
+createState(): State<LoginPage
+}
+StatefulWidget <|-- LoginPage
+class _LoginPageState {
+emailController: TextEditingController
+passwordController: TextEditingController
+authService: AuthService
+loginUser(): void
+build(): Widget
+}
+State <|-- _LoginPageState
+_LoginPageState ..> TextEditingController
+_LoginPageState ..> AuthService
+class MyApp {
+createState(): State<MyApp
+}
+StatefulWidget <|-- MyApp
+class _MyAppState {
+authService: AuthService
+initState(): void
+build(): Widget
+}
+State <|-- _MyAppState
+_MyAppState ..> AuthService
+class Subscription {
+id: int
+matriculationNumber: String
+trainingCode: String
+subscriptionDate: String
+status: String
+toMap(): Map<String, dynamic
+}
+class User {
+id: String
+firstName: String
+lastName: String
+email: String
+password: String
+role: String
+createdAt: String
+matriculationNumber: String
+token: String
+toMap(): Map<String, dynamic
+toJson(): String
+}
+class ProfilePage {
+createState(): _ProfilePageState
+}
+StatefulWidget <|-- ProfilePage
+class _ProfilePageState {
+-subscriptionsCountFuture: Future<int>
+authService: AuthService
+initState(): void
+formatDate(): String
+signOutUser(): void
+build(): Widget
+}
+State <|-- _ProfilePageState
+_ProfilePageState ..> Future
+_ProfilePageState ..> AuthService
+class SubscriptionProvider {
+-subscriptions: List<Subscription>
+subscriptions(): Subscription[0..*]
+addSubscription(): void
+setSubscriptions(): void
+}
+ChangeNotifier <|-- SubscriptionProvider
+class UserProvider {
+-user: User
+user(): User
+setUser(): void
+setUserFromModel(): void
+}
+ChangeNotifier <|-- UserProvider
+UserProvider ..> User
+class AuthService {
+baseUrl: String
+signInUser(): void
+getUserData(): void
+signOut(): void
+}
+class SubscriptionService {
+baseUrl: String
+fetchSubscriptions(): MapString, dynamic[0..*]
+subscribeToTraining(): void
+unsubscribeFromTraining(): void
+checkSubscription(): bool
+fetchSubscribedStudentsCount(): int
+fetchUserSubscriptionsCount(): int
+}
+class TrainingService {
+baseUrl: String
+createTraining(): void
+deleteTraining(): void
+updateTraining(): void
+fetchTrainings(): MapString, dynamic[0..*]
+}
+class UserService {
+baseUrl: String
+createUser(): void
+fetchUsers(): MapString, dynamic[0..*]
+deleteUser(): void
+updateUser(): void
+}
+class AppointmentListPage {
+createState(): _Appointmentdynamic[0..*]PageState
+}
+StatefulWidget <|-- AppointmentListPage
+class _AppointmentListPageState {
+backgroundImages: List<String>
+trainingService: null
+subscriptionService: null
+futureTrainings: Future<List<Map<String, dynamic>>>
+subscriptionStatus: Map<String, bool>
+activeCardIndex: int?
+maxCapacityReached: Map<String, bool>
+-_checkCapacity(): void
+initState(): void
+-_loadTrainings(): void
+getRandomImage(): String
+-_initializeSubscriptionStatus(): void
+formatDate(): String
+build(): Widget
+}
+State <|-- _AppointmentListPageState
+_AppointmentListPageState ..> Future
+class UsersPage {
+createState(): _UsersPageState
+}
+StatefulWidget <|-- UsersPage
+class _UsersPageState {
+userService: null
+futureUsers: Future<List<Map<String, dynamic>>>
+subscriptionService: null
+ProfilPictures: List<String>
+activeCardIndex: int?
+getRandomImage(): String
+initState(): void
+-_loadUsers(): void
+formatDate(): String
+-_buildUserCard(): Widget
+-_buildSection(): Widget
+build(): Widget
+}
+State <|-- _UsersPageState
+_UsersPageState ..> Future
