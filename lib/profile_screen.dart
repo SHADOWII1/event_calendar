@@ -4,7 +4,6 @@ import 'package:event_calendar/providers/user_provider.dart';
 import 'package:intl/intl.dart';
 import 'services/subscription_service.dart';
 import 'services/auth_services.dart';
-import 'dart:math';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

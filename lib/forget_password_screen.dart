@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AnimatedPopUp extends StatefulWidget {
+  const AnimatedPopUp({super.key});
+
   @override
   _AnimatedPopUpState createState() => _AnimatedPopUpState();
 }
@@ -15,7 +17,7 @@ class _AnimatedPopUpState extends State<AnimatedPopUp>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
     _animation = CurvedAnimation(parent: _controller, curve: Curves.decelerate);
     _controller.forward();
@@ -32,8 +34,8 @@ class _AnimatedPopUpState extends State<AnimatedPopUp>
     return ScaleTransition(
       scale: _animation,
       child: AlertDialog(
-        title: Text('Support Service'),
-        content: Column(
+        title: const Text('Support Service'),
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
@@ -56,7 +58,7 @@ class _AnimatedPopUpState extends State<AnimatedPopUp>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Close'),
+            child: const Text('Close'),
           ),
         ],
       ),

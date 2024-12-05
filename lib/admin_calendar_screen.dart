@@ -378,10 +378,10 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                   ),
                 );
               } else {
-                return Center(
+                return const Center(
                   child: Column(
                     children: [
-                      const SizedBox(height: 100),
+                      SizedBox(height: 100),
                       Padding(
                         padding: EdgeInsets.only(top: 40),
                         child: Text('No Training Available Today.'),

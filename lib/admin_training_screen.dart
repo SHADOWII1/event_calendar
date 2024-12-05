@@ -156,7 +156,7 @@ class _AdminTrainingsPageState extends State<AdminTrainingsPage> {
                                     // Training Description
                                     Text(
                                       training['description'],
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 16),
                                     ),
                                     const SizedBox(height: 8),
