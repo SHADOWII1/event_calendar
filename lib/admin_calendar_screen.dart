@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:event_calendar/providers/user_provider.dart';
 import 'services/subscription_service.dart';
+import 'dart:math';
 
 
 class AdminCalendarViewPage extends StatefulWidget {
@@ -25,6 +26,19 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
   late DateTime _selectedDay;
   late DateTime _focusedDay;
   final subscriptionService = SubscriptionService();
+
+  final List<String> backgroundImages = [
+    'assets/background-cards/image1.jpg',
+    'assets/background-cards/image2.jpg',
+    'assets/background-cards/image3.jpg',
+    'assets/background-cards/image4.jpg',
+    'assets/background-cards/image5.jpg',
+    'assets/background-cards/image6.jpg',
+    'assets/background-cards/image7.jpg',
+    'assets/background-cards/image8.jpg',
+    'assets/background-cards/image9.jpg',
+    'assets/background-cards/image10.jpg',
+  ];
 
   int _currentPageIndex = 0;
   late CarouselSliderController _carouselController;
@@ -52,14 +66,18 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
       }
 
       setState(() {
-        _trainingsCounter = counterMap; // Prepopulate counters for all date ranges
+        _trainingsCounter = counterMap;
       });
     }).catchError((error) {
       print("Error loading trainings: $error");
     });
   }
 
-
+  // Generate a random background image
+  String getRandomImage() {
+    final random = Random();
+    return backgroundImages[random.nextInt(backgroundImages.length)];
+  }
 
   DateTime _normalizeDate(DateTime date) {
     return DateTime(date.year, date.month, date.day);
@@ -81,8 +99,11 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
         return trainings.where((training) {
           DateTime trainingDateStart = DateTime.parse(training['start_date']);
           DateTime trainingDateEnd = DateTime.parse(training['end_date']);
-
-// Adjust the logic to correctly include trainings that fall within the selected day
+          // Assign a consistent background image based on the index
+          for (int i = 0; i < trainings.length; i++) {
+            trainings[i]['backgroundImage'] =
+            backgroundImages[i % backgroundImages.length];
+          }
           bool isWithinRange = (selectedDay.isAfter(
               trainingDateStart.subtract(const Duration(days: 1)))) &&
               (selectedDay.isAtSameMomentAs(trainingDateEnd) ||
@@ -299,6 +320,7 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                     itemBuilder: (context, index, realIndex) {
                       final training = trainings[index];
                       final isActive = index == _currentPageIndex;
+                      final backgroundImage = training['backgroundImage'];
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: AnimatedContainer(
@@ -314,27 +336,39 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                               onTap: () {
                                 _showTrainingDetails(context, training);
                               },
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      training['title'],
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                              child: Stack(
+                                children: [
+                                  // Background Image
+                                  Image.asset(
+                                    backgroundImage,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    opacity: const AlwaysStoppedAnimation(.3),
+                                    height: 200, // Adjust height as needed
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          training['title'],
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Text(
+                                            'Start Date: ${formatDate(training['start_date'])}'),
+                                        Text('End Date: ${formatDate(training['end_date'])}'),
+                                        const SizedBox(height: 20),
+                                        Text(
+                                            'Time: ${training['start_time'].substring(0,5)} - ${training['end_time'].substring(0,5)}'),
+                                      ],
                                     ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                        'Start Date: ${formatDate(training['start_date'])}'),
-                                    Text('End Date: ${formatDate(training['end_date'])}'),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                        'Time: ${training['start_time'].substring(0,5)} - ${training['end_time'].substring(0,5)}'),
-                                  ],
-                                ),
+                                  )
+                                ],
                               ),
                             ),
                           ),
