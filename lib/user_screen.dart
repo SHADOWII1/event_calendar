@@ -39,7 +39,13 @@ class _UsersPageState extends State<UsersPage> {
 
   void _loadUsers() {
     setState(() {
-      futureUsers = userService.fetchUsers();
+      futureUsers = userService.fetchUsers().then((users) {
+        final random = Random();
+        for (var user in users) {
+          user['profile_image'] = ProfilPictures[random.nextInt(ProfilPictures.length)];
+        }
+        return users;
+      });
     });
   }
 
@@ -49,7 +55,7 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Widget _buildUserCard(Map<String, dynamic> user, int index) {
-    final profileImage = getRandomImage();
+    final profileImage = user['profile_image'];
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
