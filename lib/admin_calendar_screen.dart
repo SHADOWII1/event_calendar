@@ -180,11 +180,11 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                       } else if (snapshot.hasData) {
                         return Row(
                           children: [
-                            const Icon(Icons.people, size: 18, color: Colors.blue),
+                            const Icon(Icons.check_circle, size: 18, color: Colors.green),
                             const SizedBox(width: 8),
                             Text(
                               '${snapshot.data} students subscribed', // Display the count
-                              style: const TextStyle(fontSize: 14, color: Colors.blue),
+                              style: const TextStyle(fontSize: 14, color: Colors.green),
                             ),
                           ],
                         );
@@ -196,12 +196,12 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                   Row(
                     children: [
                       const Icon(Icons.people,
-                          size: 18, color: Colors.green),
+                          size: 18, color: Colors.blue),
                       const SizedBox(width: 8),
                       Text(
                         'Min | Max Students: ${training['min_enrolled_students']} | ${training['max_enrolled_students']}',
                         style: const TextStyle(
-                            fontSize: 14, color: Colors.green),
+                            fontSize: 14, color: Colors.blue),
                       ),
                     ],
                   ),
@@ -248,8 +248,8 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
               titleCentered: true,
               formatButtonVisible: false,
               titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.blue),
-              rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.blue),
+              leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.purple),
+              rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.purple),
             ),
             calendarStyle: CalendarStyle(
               todayTextStyle: TextStyle(color: Colors.blue),
@@ -258,11 +258,12 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                 border: Border.all(color: Colors.blue.shade200, width: 1.5),
                 shape: BoxShape.circle,
               ),
-              selectedTextStyle: TextStyle(color: Colors.green),
+              selectedTextStyle: TextStyle(color: Colors.purple, fontSize: 14,
+                fontWeight: FontWeight.bold,),
               selectedDecoration: BoxDecoration(
-                color: Colors.green.shade200.withOpacity(0.2),
-                border: Border.all(color: Colors.green.shade200, width: 1.5),
-                shape: BoxShape.circle,
+                color: Colors.purple.shade200.withOpacity(0.2),
+                border: Border.all(color: Colors.purple.shade200.withOpacity(0.2), width: 1.5),
+                shape: BoxShape.rectangle,
               ),
               markerDecoration: BoxDecoration(
                 color: Colors.orange,
@@ -278,21 +279,21 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                     _trainingsCounter[dateWithoutTime]!.isNotEmpty) {
                   return Positioned(
                     bottom: 1,
-                    right: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.purple.shade200.withOpacity(0.4),
-                        shape: BoxShape.circle,
-                      ),
-                      padding: const EdgeInsets.all(5),
-                      child: Text(
-                        '${_trainingsCounter[dateWithoutTime]!.length}',
-                        style: const TextStyle(color: Colors.purple,
-                          fontSize: 12, 
-                          fontWeight: FontWeight.bold,),
+                    child: Align(
+                      alignment: Alignment.topCenter, // Centers the dots horizontally under the date
+                      child: Container(
+                        child: Text(
+                          '• ' * (_trainingsCounter[dateWithoutTime]!.length), // Display dots based on the count
+                          style: const TextStyle(
+                            color: Colors.purple,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   );
+
                 }
                 return const SizedBox.shrink();
               },
@@ -315,9 +316,9 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                     options: CarouselOptions(
                       height: double.infinity,
                       enableInfiniteScroll: false,
-                      viewportFraction: 0.55,
+                      viewportFraction: 0.6,
                       enlargeCenterPage: true,
-                      enlargeFactor: 0.3,
+                      enlargeFactor: 0.25,
                       enlargeStrategy: CenterPageEnlargeStrategy.height,
                       scrollDirection: Axis.vertical,
                       onPageChanged: (index, reason) {
