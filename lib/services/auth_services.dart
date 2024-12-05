@@ -7,10 +7,19 @@ import 'package:event_calendar/providers/user_provider.dart';
 import '../home_screen.dart';
 import '../utils/utils.dart';
 import '../login_screen.dart';
+import 'package:flutter/foundation.dart';
 
+final String baseUrl = '${getBaseUrl()}/api/auth';
+
+String getBaseUrl() {
+  if (kIsWeb) {
+    return 'http://localhost:3000'; // Use actual machine IP for web
+  } else {
+    return 'http://10.0.2.2:3000'; // For Android emulator
+  }
+}
 
 class AuthService {
-  final String baseUrl = 'http://10.0.2.2:3000/api/auth';
 
   void signInUser({
     required BuildContext context,

@@ -1,8 +1,18 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
+
+final String baseUrl = '${getBaseUrl()}/api/user';
+
+String getBaseUrl() {
+  if (kIsWeb) {
+    return 'http://localhost:3000';
+  } else {
+    return 'http://10.0.2.2:3000';
+  }
+}
 
 class UserService {
-  final String baseUrl = 'http://10.0.2.2:3000/api/user';
 
   Future<void> createUser({
     required String firstName,

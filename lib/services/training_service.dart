@@ -1,8 +1,18 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
+
+final String baseUrl = '${getBaseUrl()}/api/training';
+
+String getBaseUrl() {
+  if (kIsWeb) {
+    return 'http://localhost:3000'; // Use actual machine IP for web
+  } else {
+    return 'http://10.0.2.2:3000'; // For Android emulator
+  }
+}
 
 class TrainingService {
-  final String baseUrl = 'http://10.0.2.2:3000/api/training';
 
   Future<void> createTraining({
     required String title,

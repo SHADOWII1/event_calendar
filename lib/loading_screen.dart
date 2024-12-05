@@ -18,7 +18,7 @@ class _LoadingPageState extends State<LoadingPage> {
 
   // Asynchronous function to handle the delay and navigation
   Future<void> _loadData() async {
-    await Future.delayed(const Duration(seconds: 3)); // Wait for 1 second
+    await Future.delayed(const Duration(seconds: 5)); // Wait for 1 second
     _navigateToLogin(); // Navigate to login page after delay
   }
 
