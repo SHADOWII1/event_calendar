@@ -59,10 +59,18 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_launcher_icons: ^0.14.1
 
-flutter_icons:
-  image_path: "assets/owl.png"
-  android: "launcher_icon"
-  ios: true
+#flutter_launcher_icons:
+
+#  image_path: "assets/owl_circuled.png"
+
+#  android: false
+#  ios: false
+
+#  image_path_android: "assets/owl_circuled.png"
+ # min_sdk_android: 21
+ # remove_alpha_ios: true
+ # adaptive_icon_background: "#ffffff"
+ # adaptive_icon_foreground: "assets/owl_circuled.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -80,7 +88,12 @@ flutter:
     - assets/academic-calendar-high-resolution-logo.svg
     - assets/academic-calendar-high-resolution-logo.png
     - assets/owl.png
+    - assets/owl_circuled.png
     - assets/profile_picture.png
+    - assets/profile_picture_placeholder.jpg
+    - assets/profile_picture_placeholder_1.jpg
+    - assets/profile_picture_placeholder_2.jpg
+    - assets/profile_picture_placeholder_3.jpg
     - assets/background-cards/image1.jpg
     - assets/background-cards/image2.jpg
     - assets/background-cards/image3.jpg

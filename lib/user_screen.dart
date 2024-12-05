@@ -4,6 +4,7 @@ import 'package:event_calendar/create_user_screen.dart';
 import 'package:event_calendar/edit_user_screen.dart';
 import 'package:intl/intl.dart';
 import 'services/subscription_service.dart';
+import 'dart:math';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
@@ -16,6 +17,17 @@ class _UsersPageState extends State<UsersPage> {
   final userService = UserService();
   late Future<List<Map<String, dynamic>>> futureUsers;
   final subscriptionService = SubscriptionService();
+  final List<String> ProfilPictures = [
+    'assets/profile_picture_placeholder.jpg',
+    'assets/profile_picture_placeholder_1.jpg',
+    'assets/profile_picture_placeholder_2.jpg',
+    'assets/profile_picture_placeholder_3.jpg',
+  ];
+
+  String getRandomImage() {
+    final random = Random();
+    return ProfilPictures[random.nextInt(ProfilPictures.length)];
+  }
 
   int? activeCardIndex;
 
@@ -37,6 +49,7 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Widget _buildUserCard(Map<String, dynamic> user, int index) {
+    final profileImage = getRandomImage();
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
@@ -67,8 +80,7 @@ class _UsersPageState extends State<UsersPage> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.asset(
-                        //'assets/images/${user['image_name']}',  // Ensure user has image_name or use default
-                        'assets/profile_picture.png',
+                        profileImage,
                         width: double.infinity,  // Make the image fill the card width
                         height: 240,  // Set the desired height for the image
                         fit: BoxFit.cover,  // Ensure the image scales properly
