@@ -89,6 +89,11 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
     return DateFormat('yyyy-MM-dd').format(dateTime); // Format as 'YYYY-MM-DD'
   }
 
+  String formatTime(String time) {
+    final dateTime = DateFormat("HH:mm:ss").parse(time);
+    return DateFormat("HH:mm").format(dateTime); // Format as 'HH:mm'
+  }
+
   void _filterTrainings(DateTime selectedDay) {
     setState(() {
       var userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -276,13 +281,15 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                     right: 1,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.purple.shade200.withOpacity(0.4),
+                        shape: BoxShape.circle,
                       ),
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(5),
                       child: Text(
                         '${_trainingsCounter[dateWithoutTime]!.length}',
-                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                        style: const TextStyle(color: Colors.purple,
+                          fontSize: 12, 
+                          fontWeight: FontWeight.bold,),
                       ),
                     ),
                   );
@@ -361,13 +368,61 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        const SizedBox(height: 20),
+                                        const SizedBox(height: 8),
+                                        // Training Description
                                         Text(
-                                            'Start Date: ${formatDate(training['start_date'])}'),
-                                        Text('End Date: ${formatDate(training['end_date'])}'),
+                                          training['description'],
+                                          style: const TextStyle(
+                                              fontSize: 16),
+                                        ),
                                         const SizedBox(height: 20),
-                                        Text(
-                                            'Time: ${training['start_time'].substring(0,5)} - ${training['end_time'].substring(0,5)}'),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                color: Colors.purple.shade200.withOpacity(0.2), // Transparent blue background
+                                                border: Border.all(color: Colors.purple.shade200, width: 1.5), // Blue border
+                                                borderRadius: BorderRadius.circular(12), // Rounded corners
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  const SizedBox(width: 10),
+                                                  Icon(Icons.calendar_month, size: 18, color: Colors.purple), // Blue icon
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    training['start_date'] == training['end_date']
+                                                        ? formatDate(training['start_date']) // Only show one date if they are the same
+                                                        : '${formatDate(training['start_date'])} - ${formatDate(training['end_date'])}', // Show range if different
+                                                    style: const TextStyle(fontSize: 14, color: Colors.purple), // Text style
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: 5),
+                                            Container(
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                color: Colors.purple.shade200.withOpacity(0.2), // Transparent blue background
+                                                border: Border.all(color: Colors.purple.shade200, width: 1.5), // Blue border
+                                                borderRadius: BorderRadius.circular(12), // Rounded corners
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  const SizedBox(width: 10),
+                                                  Icon(Icons.alarm, size: 18, color: Colors.purple), // Blue icon
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    '${formatTime(training['start_time'])} - ${formatTime(training['end_time'])}',
+                                                    style: const TextStyle(fontSize: 14, color: Colors.purple), // Blue text
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     ),
                                   )
