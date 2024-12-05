@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'services/auth_services.dart';
+import './forget_password_screen.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -125,7 +126,12 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           TextButton(
                             onPressed: () {
-                              // Navigate to Forgot Password page
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AnimatedPopUp();
+                                },
+                              );
                             },
                             child: const Text("Forgot Password?"),
                           ),

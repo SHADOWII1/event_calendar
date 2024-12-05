@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'services/subscription_service.dart';
 import 'package:provider/provider.dart';
 import 'package:event_calendar/providers/user_provider.dart';
+import 'dart:math';
 
 class AppointmentListPage extends StatefulWidget {
   const AppointmentListPage({super.key});
@@ -13,6 +14,18 @@ class AppointmentListPage extends StatefulWidget {
 }
 
 class _AppointmentListPageState extends State<AppointmentListPage> {
+  final List<String> backgroundImages = [
+    'assets/background-cards/image1.jpg',
+    'assets/background-cards/image2.jpg',
+    'assets/background-cards/image3.jpg',
+    'assets/background-cards/image4.jpg',
+    'assets/background-cards/image5.jpg',
+    'assets/background-cards/image6.jpg',
+    'assets/background-cards/image7.jpg',
+    'assets/background-cards/image8.jpg',
+    'assets/background-cards/image9.jpg',
+    'assets/background-cards/image10.jpg',
+  ];
   final trainingService = TrainingService();
   final subscriptionService = SubscriptionService();
   late Future<List<Map<String, dynamic>>> futureTrainings;
@@ -44,10 +57,22 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   void _loadTrainings() {
     setState(() {
       futureTrainings = trainingService.fetchTrainings();
-    });
-    futureTrainings.then((trainings) {
+
+      futureTrainings.then((trainings) {
       _initializeSubscriptionStatus(trainings);
+      for (int i = 0; i < trainings.length; i++) {
+        trainings[i]['backgroundImage'] =
+        backgroundImages[i % backgroundImages.length];
+      }
+      return trainings;
     });
+    });
+  }
+
+  // Generate a random background image
+  String getRandomImage() {
+    final random = Random();
+    return backgroundImages[random.nextInt(backgroundImages.length)];
   }
 
   // Initialize subscription status for all trainings
@@ -103,6 +128,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
               itemCount: trainings.length,
               itemBuilder: (context, index) {
                 final training = trainings[index];
+                final backgroundImage = training['backgroundImage'];
                 final trainingCode = training['code'];
                 final isSubscribed = subscriptionStatus[trainingCode] ?? false;
                 return Padding(
@@ -126,80 +152,111 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Stack(
                               children: [
-                                // Training Title
-                                Text(
-                                  training['title'],
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                // Background Image
+                                Image.asset(
+                                  backgroundImage,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  opacity: const AlwaysStoppedAnimation(.3),
+                                  height: 200, // Adjust height as needed
                                 ),
-                                const SizedBox(height: 8),
-                                // Training Description
-                                Text(
-                                  training['description'],
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.grey[700]),
-                                ),
-                                const SizedBox(height: 8),
-                                // Dates and Times
-                                Text(
-                                  'Start Date: ${formatDate(training['start_date'])}',
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                                Text(
-                                  'End Date: ${formatDate(training['end_date'])}',
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                                Text(
-                                  'Time: ${training['start_time']} - ${training['end_time']}',
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                                const SizedBox(height: 8),
-                                FutureBuilder<int>(
-                                  future: subscriptionService.fetchSubscribedStudentsCount(training['code']),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return const CircularProgressIndicator();
-                                    } else if (snapshot.hasError) {
-                                      return Text('Error: ${snapshot.error}');
-                                    } else if (snapshot.hasData) {
-                                      return Row(
+                                // Overlay and Training Details
+                                Container(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Training Title
+                                      Text(
+                                        training['title'],
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      // Training Description
+                                      Text(
+                                        training['description'],
+                                        style: TextStyle(
+                                            fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      // Dates and Times
+                                      Row(
                                         children: [
-                                          const Icon(Icons.people, size: 18, color: Colors.blue),
+                                          const Icon(Icons.calendar_month,
+                                              size: 18, color: Colors.black),
                                           const SizedBox(width: 8),
                                           Text(
-                                            '${snapshot.data} students subscribed', // Display the count
-                                            style: const TextStyle(fontSize: 14, color: Colors.blue),
+                                            '${formatDate(training['start_date'])} - ${formatDate(training['end_date'])}',
+                                            style: const TextStyle(fontSize: 14),
                                           ),
                                         ],
-                                      );
-                                    }
-                                    return const Text('No data available');
-                                  },
-                                ),
-                                // Maximum Students
-                                Row(
-                                  children: [
-                                    const Icon(Icons.people,
-                                        size: 18, color: Colors.green),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'Min | Max Students: ${training['min_enrolled_students']} | ${training['max_enrolled_students']}',
-                                      style: const TextStyle(
-                                          fontSize: 14, color: Colors.green),
-                                    ),
-                                  ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.alarm,
+                                              size: 18, color: Colors.black),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            '${training['start_time']} - ${training['end_time']}',
+                                            style: const TextStyle(fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                      // Maximum Students
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.people,
+                                              size: 18, color: Colors.black),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            'Min | Max Students: ${training['min_enrolled_students']} | ${training['max_enrolled_students']}',
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      FutureBuilder<int>(
+                                        future: subscriptionService
+                                            .fetchSubscribedStudentsCount(
+                                            training['code']),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const CircularProgressIndicator();
+                                          } else if (snapshot.hasError) {
+                                            return Text(
+                                                'Error: ${snapshot.error}');
+                                          } else if (snapshot.hasData) {
+                                            return Row(
+                                              children: [
+                                                const Icon(Icons.people,
+                                                    size: 18, color: Colors.blue),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  '${snapshot.data} students subscribed', // Display the count
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.blue),
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                          return const Text('No data available');
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
                         if (activeCardIndex == index)
                           Row(
                             children: [
