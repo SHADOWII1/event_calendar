@@ -39,30 +39,38 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final user = userProvider.user;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-        actions: [
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, child) {
-              return Switch(
-                value: themeProvider.themeMode == ThemeMode.dark,
-                onChanged: (value) {
-                  themeProvider.toggleTheme(value);
-                },
-              );
-            },
-          ),
-        ],
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(
+                  Icons.wb_sunny,
+                  color: themeProvider.isDarkMode ? Colors.grey : Colors.orange, // Inactive is grey
+                  size: 30,
+                ),
+                Switch(
+                  value: themeProvider.isDarkMode,
+                  onChanged: (value) {
+                    themeProvider.toggleTheme();
+                  },
+                ),
+                Icon(
+                  Icons.nightlight_round,
+                  color: themeProvider.isDarkMode ? Colors.blue : Colors.grey, // Inactive is grey
+                  size: 30,
+                ),
+              ],
+            ),
+            const SizedBox(height: 40),
             // Profile Picture Placeholder
             const Center(
               child: CircleAvatar(

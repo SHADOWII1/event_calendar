@@ -263,7 +263,6 @@ class _UsersPageState extends State<UsersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Users'),
         actions: [
           IconButton(
             icon: const Icon(Icons.person_add),

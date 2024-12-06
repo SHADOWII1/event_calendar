@@ -89,35 +89,58 @@ class _AdminTrainingsPageState extends State<AdminTrainingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Trainings'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.event),
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CreateTrainingPage()),
-              );
-              if (result != null && result) {
-                _loadTrainings();
-              }
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: TrainingSearchDelegate(
-                  searchQuery: searchQuery,
-                  onSearchChanged: _searchTrainings,
-                  cardIndex: activeCardIndex,
+        title: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.event),
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateTrainingPage(),
+                  ),
+                );
+                if (result != null && result) {
+                  _loadTrainings();
+                }
+              },
+            ),
+            const SizedBox(width: 8), // Spacing between icon and search bar
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  showSearch(
+                    context: context,
+                    delegate: TrainingSearchDelegate(
+                      searchQuery: searchQuery,
+                      onSearchChanged: _searchTrainings,
+                      cardIndex: activeCardIndex,
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Adjust to fit your theme
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey.shade400), // Optional border
+                  ),
+                  child: Row(
+                    children: const [
+                      SizedBox(width: 8),
+                      Icon(Icons.search, color: Colors.grey),
+                      SizedBox(width: 8),
+                      Text(
+                        'Search trainings...',
+                        style: TextStyle(color: Colors.grey,fontSize: 16,),
+                      ),
+                    ],
+                  ),
                 ),
-              );
-            },
-          ),
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: futureTrainings,

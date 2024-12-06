@@ -41,9 +41,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       title: 'Academic Calendar',
-      themeMode: themeProvider.themeMode,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
+      theme: themeProvider.currentTheme,
       home: Provider.of<UserProvider>(context).user.token.isEmpty
           ? const LoadingPage()
           : HomePage(isAdmin: (Provider.of<UserProvider>(context).user.role == "Admin")),
