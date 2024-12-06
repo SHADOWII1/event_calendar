@@ -227,62 +227,81 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Training Calendar')),
       body: Column(
         children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2020, 1, 1),
-            lastDay: DateTime.utc(2030, 12, 31),
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            calendarFormat: CalendarFormat.month,
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-                _filterTrainings(selectedDay);
-              });
-            },
-            headerStyle: const HeaderStyle(
-              titleCentered: true,
-              formatButtonVisible: false,
-              titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.purple),
-              rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.purple),
+          const SizedBox(height: 55),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white, // Background color of the container
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(40.0),
+                bottomRight: Radius.circular(40.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3), // Shadow color
+                  spreadRadius: 2, // Spread of the shadow
+                  blurRadius: 5, // Blur effect
+                  offset: const Offset(0, 3), // Position of the shadow
+                ),
+              ],
             ),
-            calendarStyle: CalendarStyle(
-              todayTextStyle: TextStyle(color: Colors.blue),
-              todayDecoration: BoxDecoration(
-                color: Colors.blue.shade200.withOpacity(0.2),
-                border: Border.all(color: Colors.blue.shade200, width: 1.5),
-                shape: BoxShape.circle,
+            child: TableCalendar(
+              firstDay: DateTime.utc(2020, 1, 1),
+              lastDay: DateTime.utc(2030, 12, 31),
+              focusedDay: _focusedDay,
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              calendarFormat: CalendarFormat.month,
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                  _filterTrainings(selectedDay);
+                });
+              },
+              headerStyle: const HeaderStyle(
+                titleCentered: true,
+                formatButtonVisible: false,
+                titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.purple),
+                rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.purple),
               ),
-              selectedTextStyle: TextStyle(color: Colors.purple, fontSize: 14,
-                fontWeight: FontWeight.bold,),
-              selectedDecoration: BoxDecoration(
-                color: Colors.purple.shade200.withOpacity(0.2),
-                border: Border.all(color: Colors.purple.shade200.withOpacity(0.2), width: 1.5),
-                shape: BoxShape.rectangle,
+              calendarStyle: CalendarStyle(
+                todayTextStyle: const TextStyle(color: Colors.blue),
+                todayDecoration: BoxDecoration(
+                  color: Colors.blue.shade200.withOpacity(0.2),
+                  border: Border.all(color: Colors.blue.shade200, width: 1.5),
+                  shape: BoxShape.circle,
+                ),
+                selectedTextStyle: const TextStyle(
+                  color: Colors.purple,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Colors.purple.shade200.withOpacity(0.2),
+                  border: Border.all(
+                    color: Colors.purple.shade200.withOpacity(0.2),
+                    width: 1.5,
+                  ),
+                  shape: BoxShape.rectangle,
+                ),
+                markerDecoration: const BoxDecoration(
+                  color: Colors.orange,
+                  shape: BoxShape.circle,
+                ),
               ),
-              markerDecoration: BoxDecoration(
-                color: Colors.orange,
-                shape: BoxShape.circle,
-              ),
-            ),
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, events) {
-                final dateWithoutTime =
-                DateTime(date.year, date.month, date.day);
-                // Check if there are trainings for this day
-                if (_trainingsCounter[dateWithoutTime] != null &&
-                    _trainingsCounter[dateWithoutTime]!.isNotEmpty) {
-                  return Positioned(
-                    bottom: 1,
-                    child: Align(
-                      alignment: Alignment.topCenter, // Centers the dots horizontally under the date
-                      child: Container(
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, events) {
+                  final dateWithoutTime = DateTime(date.year, date.month, date.day);
+                  if (_trainingsCounter[dateWithoutTime] != null &&
+                      _trainingsCounter[dateWithoutTime]!.isNotEmpty) {
+                    return Positioned(
+                      bottom: 1,
+                      child: Align(
+                        alignment: Alignment.topCenter,
                         child: Text(
-                          '• ' * (_trainingsCounter[dateWithoutTime]!.length), // Display dots based on the count
+                          '• ' * (_trainingsCounter[dateWithoutTime]!.length),
                           style: const TextStyle(
                             color: Colors.purple,
                             fontSize: 14,
@@ -290,13 +309,14 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           ),
+
           FutureBuilder<List<Map<String, dynamic>>>(
             future: allTrainings,
             builder: (context, snapshot) {
@@ -314,7 +334,7 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                     options: CarouselOptions(
                       height: double.infinity,
                       enableInfiniteScroll: false,
-                      viewportFraction: 0.6,
+                      viewportFraction: 0.55,
                       enlargeCenterPage: true,
                       enlargeFactor: 0.25,
                       enlargeStrategy: CenterPageEnlargeStrategy.height,
@@ -331,7 +351,7 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                       final isActive = index == _currentPageIndex;
                       final backgroundImage = training['backgroundImage'];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
@@ -339,7 +359,7 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                           child: Card(
                             elevation: isActive ? 10 : 5,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             child: GestureDetector(
                               onTap: () {
@@ -353,7 +373,7 @@ class _AdminCalendarViewPageState extends State<AdminCalendarViewPage> {
                                     fit: BoxFit.cover,
                                     width: double.infinity,
                                     opacity: const AlwaysStoppedAnimation(.3),
-                                    height: 200, // Adjust height as needed
+                                    height: 300, // Adjust height as needed
                                   ),
                                   Container(
                                     padding: const EdgeInsets.all(10.0),

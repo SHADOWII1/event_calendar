@@ -48,6 +48,16 @@ dependencies:
   moment_dart: ^2.0.0
   code_uml: ^1.0.2
   mermaid: ^0.9.3
+  flutter_launcher_icons: ^0.14.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/owl_circuled.png"
+  min_sdk_android: 24 # android min sdk min:16, default 21
+  adaptive_icon_background: "#ffffff" # You can use a color or image for the background
+  adaptive_icon_foreground: "assets/owl_circuled.png" # For adaptive icons on Android
 
 dev_dependencies:
   flutter_test:
