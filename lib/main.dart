@@ -5,12 +5,15 @@ import 'providers/user_provider.dart';
 import 'login_screen.dart';
 import 'home_screen.dart';
 import 'loading_screen.dart';
+import 'profile_screen.dart';
+import 'providers/theme_provider.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()), // Existing provider
+        ChangeNotifierProvider(create: (_) => ThemeProvider()), // Add ThemeProvider
       ],
       child: const MyApp(),
     ),
@@ -34,11 +37,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'Academic Calendar',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      themeMode: themeProvider.themeMode,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       home: Provider.of<UserProvider>(context).user.token.isEmpty
           ? const LoadingPage()
           : HomePage(isAdmin: (Provider.of<UserProvider>(context).user.role == "Admin")),
