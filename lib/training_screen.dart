@@ -30,6 +30,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   final subscriptionService = SubscriptionService();
   late Future<List<Map<String, dynamic>>> futureTrainings;
   Map<String, bool> subscriptionStatus = {};
+  Map<String, int> subscriptionCount = {};
 
   // Track the index of the long-pressed card
   int? activeCardIndex;
@@ -44,6 +45,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
 
     setState(() {
       maxCapacityReached[training['code']] = subscribedCount >= maxStudents;
+      subscriptionCount[training['code']] = subscribedCount;
     });
   }
 
@@ -56,9 +58,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   // Fetch the latest trainings from the database
   void _loadTrainings() {
     setState(() {
-      futureTrainings = trainingService.fetchTrainings();
-
-      futureTrainings.then((trainings) {
+      futureTrainings = trainingService.fetchTrainings().then((trainings){
       _initializeSubscriptionStatus(trainings);
       for (int i = 0; i < trainings.length; i++) {
         trainings[i]['backgroundImage'] =
@@ -85,15 +85,15 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
       try {
         final isSubscribed =
         await subscriptionService.checkSubscription(matriculationNumber, trainingCode);
-        final subscribedCount =
+        subscriptionCount[trainingCode] =
         await subscriptionService.fetchSubscribedStudentsCount(trainingCode);
         final maxStudents = training['max_enrolled_students'];
+        final subscribersCount = subscriptionCount[trainingCode];
         setState(() {
           subscriptionStatus[trainingCode] = isSubscribed;
-          maxCapacityReached[trainingCode] = subscribedCount >= maxStudents;
+          maxCapacityReached[trainingCode] = subscribersCount! >= maxStudents;
         });
       } catch (e) {
-        // Handle errors gracefully
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error checking subscription for $trainingCode <-> $matriculationNumber: $e')),
         );
@@ -105,6 +105,11 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
   String formatDate(String isoDateString) {
     DateTime dateTime = DateTime.parse(isoDateString);
     return DateFormat('yyyy-MM-dd').format(dateTime); // Format as 'YYYY-MM-DD'
+  }
+
+  String formatTime(String time) {
+    final dateTime = DateFormat("HH:mm:ss").parse(time);
+    return DateFormat("HH:mm").format(dateTime); // Format as 'HH:mm'
   }
 
   @override
@@ -187,69 +192,101 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
                                       // Dates and Times
                                       Row(
                                         children: [
-                                          const Icon(Icons.calendar_month,
-                                              size: 18, color: Colors.black),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            '${formatDate(training['start_date'])} - ${formatDate(training['end_date'])}',
-                                            style: const TextStyle(fontSize: 14),
+                                          Container(
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              color: Colors.purple.shade200.withOpacity(0.2), // Transparent blue background
+                                              border: Border.all(color: Colors.purple.shade200, width: 1.5), // Blue border
+                                              borderRadius: BorderRadius.circular(12), // Rounded corners
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                const SizedBox(width: 10),
+                                                Icon(Icons.calendar_month, size: 18, color: Colors.purple), // Blue icon
+                                                const SizedBox(width: 5),
+                                                Text(
+                                                  training['start_date'] == training['end_date']
+                                                      ? formatDate(training['start_date']) // Only show one date if they are the same
+                                                      : '${formatDate(training['start_date'])} - ${formatDate(training['end_date'])}', // Show range if different
+                                                  style: const TextStyle(fontSize: 14, color: Colors.purple), // Text style
+                                                ),
+                                                const SizedBox(width: 10),
+                                              ],
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.alarm,
-                                              size: 18, color: Colors.black),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            '${training['start_time']} - ${training['end_time']}',
-                                            style: const TextStyle(fontSize: 14),
+                                          const SizedBox(width: 5),
+                                          Container(
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              color: Colors.purple.shade200.withOpacity(0.2), // Transparent blue background
+                                              border: Border.all(color: Colors.purple.shade200, width: 1.5), // Blue border
+                                              borderRadius: BorderRadius.circular(12), // Rounded corners
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                const SizedBox(width: 10),
+                                                Icon(Icons.alarm, size: 18, color: Colors.purple), // Blue icon
+                                                const SizedBox(width: 5),
+                                                Text(
+                                                  '${formatTime(training['start_time'])} - ${formatTime(training['end_time'])}',
+                                                  style: const TextStyle(fontSize: 14, color: Colors.purple), // Blue text
+                                                ),
+                                                const SizedBox(width: 10),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
                                       // Maximum Students
+                                      const SizedBox(height: 8),
                                       Row(
                                         children: [
-                                          const Icon(Icons.people,
-                                              size: 18, color: Colors.black),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            'Min | Max Students: ${training['min_enrolled_students']} | ${training['max_enrolled_students']}',
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                      FutureBuilder<int>(
-                                        future: subscriptionService
-                                            .fetchSubscribedStudentsCount(
-                                            training['code']),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return const CircularProgressIndicator();
-                                          } else if (snapshot.hasError) {
-                                            return Text(
-                                                'Error: ${snapshot.error}');
-                                          } else if (snapshot.hasData) {
-                                            return Row(
+                                          Container(
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue.shade200.withOpacity(0.2), // Transparent blue background
+                                              border: Border.all(color: Colors.blue.shade200, width: 1.5), // Blue border
+                                              borderRadius: BorderRadius.circular(12), // Rounded corners
+                                            ),
+                                            child: Row(
                                               children: [
-                                                const Icon(Icons.people,
-                                                    size: 18, color: Colors.blue),
-                                                const SizedBox(width: 8),
+                                                const SizedBox(width: 10),
+                                                Icon(Icons.people_alt, size: 18, color: Colors.blue), // Blue icon
+                                                const SizedBox(width: 5),
                                                 Text(
-                                                  '${snapshot.data} students subscribed', // Display the count
-                                                  style: const TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.blue),
+                                                  'Students: ${training['min_enrolled_students']} | ${training['max_enrolled_students']}',
+                                                  style: TextStyle(fontSize: 14, color: Colors.blue), // Blue text
                                                 ),
+                                                const SizedBox(width: 10),
                                               ],
-                                            );
-                                          }
-                                          return const Text('No data available');
-                                        },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 5),
+                                          Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.green.shade200.withOpacity(0.2), // Transparent blue background
+                                                        border: Border.all(color: Colors.blue.shade200, width: 1.5), // Blue border
+                                                        borderRadius: BorderRadius.circular(12), // Rounded corners
+                                                      ),
+                                                      child: Row(
+                                                        children: [
+                                                          const SizedBox(width: 8),
+                                                          Icon(Icons.check_circle, size: 18, color: Colors.green), // Blue icon
+                                                          const SizedBox(width: 8),
+                                                          Text(
+                                                            'Enrolled: ${subscriptionCount[training['code']]}',
+                                                            style: TextStyle(fontSize: 14, color: Colors.green), // Blue text
+                                                          ),
+                                                          const SizedBox(width: 8),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -276,7 +313,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
                                         });
                                         _checkCapacity(training);
                                         ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('Unsubscribed from $trainingCode')),
+                                          SnackBar(content: Text('Unsubscribed from $trainingCode-${training['title']}')),
                                         );
                                       } else {
                                         await subscriptionService.subscribeToTraining(
@@ -286,7 +323,7 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
                                         });
                                         _checkCapacity(training);
                                         ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('Subscribed to $trainingCode')),
+                                          SnackBar(content: Text('Subscribed to $trainingCode-$trainingCode-${training['title']}')),
                                         );
                                       }
                                     } catch (e) {
@@ -299,8 +336,14 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
                                     height: 30,
                                     decoration: BoxDecoration(
                                       color: maxCapacityReached[training['code']] == true && !isSubscribed
-                                          ? Colors.grey // Greyed out only if full and not subscribed
-                                          : (isSubscribed ? Colors.red : Colors.green), // Background color
+                                          ? Colors.grey.shade200.withOpacity(0.2) // Greyed out only if full and not subscribed
+                                          : (isSubscribed ? Colors.red.shade200.withOpacity(0.2) : Colors.green.shade200.withOpacity(0.2)),
+                                      border: Border.all(
+                                        color: maxCapacityReached[training['code']] == true && !isSubscribed
+                                            ? Colors.grey // Greyed out only if full and not subscribed
+                                            : (isSubscribed ? Colors.red : Colors.green), // Blue border color
+                                        width: 2.0, // Border thickness
+                                      ),// Background color
                                       borderRadius: const BorderRadius.only(
                                         bottomLeft: Radius.circular(12),
                                         topLeft: Radius.circular(12),
@@ -312,7 +355,9 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
                                       child:
                                       Icon( maxCapacityReached[training['code']] == true && !isSubscribed
                                           ? Icons.disabled_by_default
-                                          : (isSubscribed ? Icons.delete_forever : Icons.add_box ) , color: Colors.white),
+                                          : (isSubscribed ? Icons.delete_forever : Icons.add_box ) , color: maxCapacityReached[training['code']] == true && !isSubscribed
+                                          ? Colors.grey // Greyed out only if full and not subscribed
+                                          : (isSubscribed ? Colors.red : Colors.green),),
                                     ),
                                   ),
                                 ),

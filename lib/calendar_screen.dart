@@ -81,15 +81,20 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
     return DateTime(date.year, date.month, date.day);
   }
 
+  // Format the date to show only the date part
+  String formatDate(String isoDateString) {
+    DateTime dateTime = DateTime.parse(isoDateString);
+    return DateFormat('yyyy-MM-dd').format(dateTime); // Format as 'YYYY-MM-DD'
+  }
+
   String getRandomImage() {
     final random = Random();
     return backgroundImages[random.nextInt(backgroundImages.length)];
   }
 
-  // Format the date to show only the date part
-  String formatDate(String isoDateString) {
-    DateTime dateTime = DateTime.parse(isoDateString);
-    return DateFormat('yyyy-MM-dd').format(dateTime); // Format as 'YYYY-MM-DD'
+  String formatTime(String time) {
+    final dateTime = DateFormat("HH:mm:ss").parse(time);
+    return DateFormat("HH:mm").format(dateTime); // Format as 'HH:mm'
   }
 
   void _filterTrainings(DateTime selectedDay) {
@@ -226,71 +231,96 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Training Calendar')),
       body: Column(
         children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2020, 1, 1),
-            lastDay: DateTime.utc(2030, 12, 31),
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            calendarFormat: CalendarFormat.month,
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-                _filterTrainings(selectedDay);
-              });
-            },
-            headerStyle: const HeaderStyle(
-              titleCentered: true,
-              formatButtonVisible: false,
-              titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.blue),
-              rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.blue),
+          const SizedBox(height: 55),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white, // Background color of the container
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(40.0),
+                bottomRight: Radius.circular(40.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3), // Shadow color
+                  spreadRadius: 2, // Spread of the shadow
+                  blurRadius: 5, // Blur effect
+                  offset: const Offset(0, 3), // Position of the shadow
+                ),
+              ],
             ),
-            calendarStyle: const CalendarStyle(
-              todayTextStyle: TextStyle(color: Colors.white),
-              todayDecoration: BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.circle,
-              ),
-              selectedDecoration: BoxDecoration(
-                color: Colors.green,
-                shape: BoxShape.circle,
-              ),
-              markerDecoration: BoxDecoration(
-                color: Colors.orange,
-                shape: BoxShape.circle,
-              ),
-            ),
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, events) {
-                final dateWithoutTime =
-                    DateTime(date.year, date.month, date.day);
-                // Check if there are trainings for this day
-                if (_trainingsCounter[dateWithoutTime] != null &&
-                    _trainingsCounter[dateWithoutTime]!.isNotEmpty) {
-                  return Positioned(
-                    bottom: 1,
-                    right: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      padding: const EdgeInsets.all(4),
-                      child: Text(
-                        '${_trainingsCounter[dateWithoutTime]!.length}',
-                        style: const TextStyle(color: Colors.white, fontSize: 10),
-                      ),
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
+            child: TableCalendar(
+              firstDay: DateTime.utc(2020, 1, 1),
+              lastDay: DateTime.utc(2030, 12, 31),
+              focusedDay: _focusedDay,
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              calendarFormat: CalendarFormat.month,
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                  _filterTrainings(selectedDay);
+                });
               },
+              headerStyle: const HeaderStyle(
+                titleCentered: true,
+                formatButtonVisible: false,
+                titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.purple),
+                rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.purple),
+              ),
+              calendarStyle: CalendarStyle(
+                todayTextStyle: const TextStyle(color: Colors.blue),
+                todayDecoration: BoxDecoration(
+                  color: Colors.blue.shade200.withOpacity(0.2),
+                  border: Border.all(color: Colors.blue.shade200, width: 1.5),
+                  shape: BoxShape.circle,
+                ),
+                selectedTextStyle: const TextStyle(
+                  color: Colors.purple,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Colors.purple.shade200.withOpacity(0.2),
+                  border: Border.all(
+                    color: Colors.purple.shade200.withOpacity(0.2),
+                    width: 1.5,
+                  ),
+                  shape: BoxShape.rectangle,
+                ),
+                markerDecoration: const BoxDecoration(
+                  color: Colors.orange,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, events) {
+                  final dateWithoutTime = DateTime(date.year, date.month, date.day);
+                  if (_trainingsCounter[dateWithoutTime] != null &&
+                      _trainingsCounter[dateWithoutTime]!.isNotEmpty) {
+                    return Positioned(
+                      bottom: 1,
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          '• ' * (_trainingsCounter[dateWithoutTime]!.length),
+                          style: const TextStyle(
+                            color: Colors.purple,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           ),
+
           FutureBuilder<List<Map<String, dynamic>>>(
             future: allTrainings,
             builder: (context, snapshot) {
@@ -310,7 +340,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                       enableInfiniteScroll: false,
                       viewportFraction: 0.55,
                       enlargeCenterPage: true,
-                      enlargeFactor: 0.3,
+                      enlargeFactor: 0.25,
                       enlargeStrategy: CenterPageEnlargeStrategy.height,
                       scrollDirection: Axis.vertical,
                       onPageChanged: (index, reason) {
@@ -325,7 +355,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                       final isActive = index == _currentPageIndex;
                       final backgroundImage = training['backgroundImage'];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
@@ -333,7 +363,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                           child: Card(
                             elevation: isActive ? 10 : 5,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             child: GestureDetector(
                               onTap: () {
@@ -347,7 +377,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                                     fit: BoxFit.cover,
                                     width: double.infinity,
                                     opacity: const AlwaysStoppedAnimation(.3),
-                                    height: 200, // Adjust height as needed
+                                    height: 300, // Adjust height as needed
                                   ),
                                   Container(
                                     padding: const EdgeInsets.all(10.0),
@@ -361,13 +391,61 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        const SizedBox(height: 20),
+                                        const SizedBox(height: 8),
+                                        // Training Description
                                         Text(
-                                            'Start Date: ${formatDate(training['start_date'])}'),
-                                        Text('End Date: ${formatDate(training['end_date'])}'),
+                                          training['description'],
+                                          style: const TextStyle(
+                                              fontSize: 16),
+                                        ),
                                         const SizedBox(height: 20),
-                                        Text(
-                                            'Time: ${training['start_time'].substring(0,5)} - ${training['end_time'].substring(0,5)}'),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                color: Colors.purple.shade200.withOpacity(0.2), // Transparent blue background
+                                                border: Border.all(color: Colors.purple.shade200, width: 1.5), // Blue border
+                                                borderRadius: BorderRadius.circular(12), // Rounded corners
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  const SizedBox(width: 10),
+                                                  Icon(Icons.calendar_month, size: 18, color: Colors.purple), // Blue icon
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    training['start_date'] == training['end_date']
+                                                        ? formatDate(training['start_date']) // Only show one date if they are the same
+                                                        : '${formatDate(training['start_date'])} - ${formatDate(training['end_date'])}', // Show range if different
+                                                    style: const TextStyle(fontSize: 14, color: Colors.purple), // Text style
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: 5),
+                                            Container(
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                color: Colors.purple.shade200.withOpacity(0.2), // Transparent blue background
+                                                border: Border.all(color: Colors.purple.shade200, width: 1.5), // Blue border
+                                                borderRadius: BorderRadius.circular(12), // Rounded corners
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  const SizedBox(width: 10),
+                                                  Icon(Icons.alarm, size: 18, color: Colors.purple), // Blue icon
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    '${formatTime(training['start_time'])} - ${formatTime(training['end_time'])}',
+                                                    style: const TextStyle(fontSize: 14, color: Colors.purple), // Blue text
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     ),
                                   )
