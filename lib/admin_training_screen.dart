@@ -609,7 +609,7 @@ class TrainingSearchDelegate extends SearchDelegate {
                                             height: 30,
                                             decoration: BoxDecoration(
                                               color: Colors.green.shade200.withOpacity(0.2), // Transparent blue background
-                                              border: Border.all(color: Colors.blue.shade200, width: 1.5), // Blue border
+                                              border: Border.all(color: Colors.green.shade200, width: 1.5), // Blue border
                                               borderRadius: BorderRadius.circular(12), // Rounded corners
                                             ),
                                             child: Row(
